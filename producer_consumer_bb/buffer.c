@@ -30,6 +30,7 @@ int removeItem(buffer_item *item, int *i) {
         return 1;
     }
     *item = buffer[*i];
+    buffer[*i] = 0;
     *i = (*i+1) % BUFFER_SIZE;
     sem_post(&mutex);
     sem_post(&empty);
