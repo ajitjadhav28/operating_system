@@ -12,12 +12,13 @@
 
 int main()
 {
-    const int SIZE = 4096;
+    const size_t SIZE = __getpagesize();
     const char *name = "OS";
     const char *msg_0 = "Hello";
     const char *msg_1 = "World!";
     int shm_fd;
     void *ptr;
+    printf("System page size: %ld\n", SIZE);
     shm_fd = shm_open(name, O_CREAT | O_RDWR, 0666);    
     ftruncate(shm_fd, SIZE);
     ptr = mmap(0, SIZE, PROT_WRITE, MAP_SHARED, shm_fd, 0);
