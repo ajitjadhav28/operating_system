@@ -1,3 +1,11 @@
+/**
+ * @file main.c
+ * @author Ajit Jadhav (mr.ajitjadhav@gmail.com)
+ * @brief Producer-Consumer Bounded Buffer problem using threads
+ * @date 2019-08-15
+ * 
+ */
+
 #include <pthread.h>
 #include "buffer.h"
 #include "producer.h"

@@ -1,5 +1,12 @@
 #include "buffer.h"
 
+/**
+ * @brief Insert item into buffer
+ * 
+ * @param item 
+ * @param i 
+ * @return int 
+ */
 int insertItem(buffer_item item, int *i) {
     if(sem_wait(&empty) == -1) {
         printError("Down on `empty` in insertion unsuccessful.");
@@ -18,6 +25,13 @@ int insertItem(buffer_item item, int *i) {
     return 0;
 }
 
+/**
+ * @brief Remove item from buffer
+ * 
+ * @param item 
+ * @param i 
+ * @return int 
+ */
 int removeItem(buffer_item *item, int *i) {
     if(sem_wait(&full) == -1) {
         printError("Down on `empty` in insertion unsuccessful.");
