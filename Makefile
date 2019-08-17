@@ -5,7 +5,7 @@ BIN = ./bin/
 mylibs = mylib.c
 
 LIST = fork.bin forkp.bin pipe.bin shared_mem_consumer.bin shared_mem_producer.bin \
-		producer_consumer_bb.bin
+		producer_consumer_bb.bin frw_writer.bin frw_reader.bin
 
 PROGS = $(addprefix $(BIN), $(LIST))
 
@@ -28,6 +28,12 @@ $(BIN)shared_mem_producer.bin : ./producer_consumer_shared_mem/producer.c $(myli
 
 $(BIN)producer_consumer_bb.bin : ./producer_consumer_bb/main.c ./producer_consumer_bb/producer.c \
 									./producer_consumer_bb/consumer.c ./producer_consumer_bb/buffer.c $(mylibs)
+	$(COMPL) -lrt -lpthread
+
+$(BIN)frw_writer.bin : ./first_reader_writer/writer.c $(mylibs)
+	$(COMPL) -lrt -lpthread
+
+$(BIN)frw_reader.bin : ./first_reader_writer/reader.c $(mylibs)
 	$(COMPL) -lrt -lpthread
 
 	
