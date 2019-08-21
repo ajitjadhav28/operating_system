@@ -1,3 +1,11 @@
+/**
+ * @file pipe.c
+ * @author Ajit Jadhav (mr.ajitjadhav@gmail.com)
+ * @brief Communication between parent and child process using pipe
+ * @date 2019-08-14
+ *  
+ */
+
 #include <sys/types.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -24,7 +32,7 @@ int main(void)
         printError("Fork failed!");
         return 1;
     }
-
+    
     // Parent
     if(pid > 0) {
         close(fd[READ_END]);

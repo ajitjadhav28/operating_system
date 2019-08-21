@@ -5,7 +5,8 @@ BIN = ./bin/
 mylibs = mylib.c
 
 LIST = fork.bin forkp.bin pipe.bin shared_mem_consumer.bin shared_mem_producer.bin \
-		producer_consumer_bb.bin frw_writer.bin frw_reader.bin
+		producer_consumer_bb.bin frw_writer.bin frw_reader.bin \
+		paging_problm.bin
 
 PROGS = $(addprefix $(BIN), $(LIST))
 
@@ -36,6 +37,8 @@ $(BIN)frw_writer.bin : ./first_reader_writer/writer.c $(mylibs)
 $(BIN)frw_reader.bin : ./first_reader_writer/reader.c $(mylibs)
 	$(COMPL) -lrt -lpthread
 
+$(BIN)paging_problm.bin : paging_problm.cpp
+	g++ $(CFLAG) $^ -o $@
 	
 $(shell mkdir -p bin)
 
