@@ -6,7 +6,7 @@ mylibs = mylib.c
 
 LIST = fork.bin forkp.bin pipe.bin shared_mem_consumer.bin shared_mem_producer.bin \
 		producer_consumer_bb.bin frw_writer.bin frw_reader.bin \
-		paging_problm.bin paging_performance.bin
+		paging_problm.bin paging_performance.bin vmm.bin
 
 PROGS = $(addprefix $(BIN), $(LIST))
 
@@ -42,6 +42,9 @@ $(BIN)paging_problm.bin : paging_problm.cpp
 
 $(BIN)paging_performance.bin : paging_performance.c $(mylibs)
 	$(COMPL)
+
+$(BIN)vmm.bin : ./virtual_mem_manager/tlb.cpp ./virtual_mem_manager/page_table.cpp ./virtual_mem_manager/backing_store.cpp ./virtual_mem_manager/main.cpp
+	g++ $(CFLAG) $^ -o $@
 	
 $(shell mkdir -p bin)
 
