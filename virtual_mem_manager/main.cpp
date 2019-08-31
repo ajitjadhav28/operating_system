@@ -1,7 +1,7 @@
 /**
  * @file main.cpp
  * @author Ajit Jadhav (mr.ajitjadhav@gmail.com)
- * @brief Programming Project form O.S. Concepts: 
+ * @brief Programming Project form O.S. Concepts:
  *             Designing a Virtual Memory Manager
  *             (Physical Address Space = Virtual Address Space)
  * @date 2019-08-30
@@ -10,6 +10,7 @@
 #include <iostream>
 #include <array>
 #include <fstream>
+#include <algorithm>
 
 #include "page_table.h"
 #include "backing_store.h"
@@ -47,17 +48,27 @@ TLB tlb;
 array<array<char,256>, 256> phy_memory;
 string page_buff;
 
-bool prepare_logical_addresses(uint16_t n){
-    FILE *fptr = fopen(ADDR_FILE, "w");
-    if(fptr == NULL){
-        cerr << "Error creating address file." << endl;
-        exit(1);
-    }
+bool prepare_logical_addresses(int32_t n){
+    vector<uint32_t> addressBuf;
+    ofstream addr_file(ADDR_FILE);
+    
     while(n--){
         // randon 32 bit address
-        fprintf(fptr, "%u\n", rand() % 0xffffffff);
+        addressBuf.push_back((rand() % 0xffffffff));
     }
-    fclose(fptr);
+    
+    // Sort vector in ascending order
+    sort(addressBuf.begin(),
+        addressBuf.end(),
+        [](uint32_t a, uint32_t b){
+            return a < b ? 1 : 0;
+        }
+    );
+    
+    for(auto addr : addressBuf)
+        addr_file << addr << endl;
+
+    addr_file.close();
     return 0;
 }
 
@@ -79,13 +90,13 @@ int main(int argc, char const *argv[])
     char byte_buff;
     v_addr vadd;
     p_addr padd;
-    fstream log_addr_file(ADDR_FILE);
-    
+
     if(argc == 2)
         prepare_logical_addresses(atol(argv[1]));
     else
-        prepare_logical_addresses(100);
+        prepare_logical_addresses(2);
 
+    fstream log_addr_file(ADDR_FILE);
     while(log_addr_file >> virtual_addr){
         if(parseAddress(virtual_addr, &vadd)){
             exit(1);
@@ -102,10 +113,9 @@ int main(int argc, char const *argv[])
         }
         else { // TLB Miss
             // Find the page in page table
-            // std::cout << "TLB miss for " << v << endl;
-            padd.f = page_table[vadd.p]; // Query Page Table
-            if(padd.f == -1) continue; // if invalid address continue
-            if(padd.f == NULL){ // if page not present
+            int16_t f = page_table[vadd.p]; // Query Page Table
+            if(f == -1) continue; // if invalid address continue
+            if(f == -2){ // if page not present (page fault)
                 page_buff = store.readPageFrom(vadd.p, PAGE_SIZE); // read it from backing_store
                 padd.f = vadd.p; // as V.A.S. = P.A.S
 
@@ -125,6 +135,7 @@ int main(int argc, char const *argv[])
                 byte_buff = page_buff[vadd.d];
             } else {    // if page present in memory
                 padd.d = vadd.d;
+                padd.f = f;
                 byte_buff = phy_memory[padd.f][padd.d]; // read byte from memory
             }
         }

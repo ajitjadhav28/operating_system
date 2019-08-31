@@ -5,7 +5,10 @@
 #include <random>
 
 using namespace std;
-
+/**
+ * @brief TLB class
+ * 
+ */
 class TLB {
     private:
         unordered_map<uint16_t,uint16_t> tlb;

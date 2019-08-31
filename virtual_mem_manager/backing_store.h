@@ -5,6 +5,10 @@
 
 using namespace std;
 
+/**
+ * @brief Backing Store class
+ * 
+ */
 class BackingStore
 {
 private:
